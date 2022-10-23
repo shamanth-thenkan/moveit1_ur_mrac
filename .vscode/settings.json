@@ -1,0 +1,38 @@
+{
+    "ros.distro": "noetic",
+    
+    "python.autoComplete.extraPaths": [
+        "/dev_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "./move_group_sequence/src",
+        "./trajectory_tools/src"
+    ],
+    "python.analysis.extraPaths": [
+        "/dev_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "./move_group_sequence/src",
+        "./trajectory_tools/src"
+    ],
+
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+      },
+    
+    "cmake.configureOnOpen": false,
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": false,
+    "cSpell.words": [
+        "actionlib",
+        "devcontainer",
+        "launchfile",
+        "launchfiles",
+        "loginfo",
+        "moveit",
+        "pyassimp",
+        "roslaunch",
+        "rospy"
+    ],
+    "problems.decorations.enabled": false
+}

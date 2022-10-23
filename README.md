@@ -1,6 +1,8 @@
 
 # Docker Moveit and UR10e
 
+Version with git submodules can be found [here](https://github.com/vinceHuyghe/moveit1_ur)
+
 ## Description
 
 Contents of container:

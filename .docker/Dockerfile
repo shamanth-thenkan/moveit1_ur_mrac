@@ -34,6 +34,7 @@ RUN pip3 install -U --no-cache-dir\
     flake8-length \
     flake8-todo \
     flake8-quotes \
+    jupyterlab_widgets \
     black \
     numpy \
     open3d \

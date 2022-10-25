@@ -8,9 +8,7 @@ def robot_program():
     th = TrajectoryHandler()
     sequence = Sequence()
 
-    start = th.start_position
-
-    sequence.append(Ptp(goal=start))
+    sequence.append(Ptp(goal=th.start))
 
     # create pose mgs list form yaml
     poses = poses_from_yaml("/dev_ws/src/trajectory_tools/yaml/test.yaml")

@@ -16,9 +16,7 @@ def robot_program():
     th = TrajectoryHandler()
 
     # go to start
-    start = th.start_position
-
-    th.sequencer.plan(Ptp(goal=start))
+    th.sequencer.plan(Ptp(goal=th.start))
     th.sequencer.execute()
 
     pose = Pose(position=Point(0.6, 0, 0.5), orientation=Quaternion(0.0, 0.5, 0.0, 0.5))

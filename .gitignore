@@ -2,3 +2,4 @@
 /stomp_ros
 /rqt_joint_trajectory_plot
 /realsense-ros
+/tf2_web_republisher

@@ -10,7 +10,7 @@ from trajectory_tools.trajectory_handler import TrajectoryHandler
 
 def robot_program():
 
-    th = TrajectoryHandler(sim=False)
+    th = TrajectoryHandler(disable_io=False)
 
     start = th.start
     pose_l = Pose(position=Point(0.8, -0.6, 0.4), orientation=from_euler(0.0, pi, 0.0))

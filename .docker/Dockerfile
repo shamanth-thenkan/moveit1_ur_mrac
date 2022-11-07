@@ -56,6 +56,7 @@ RUN apt-get update && apt-get install -y \
     ros-$ROSDISTRO-rqt-reconfigure \
     ros-$ROSDISTRO-rqt-joint-trajectory-controller \
     ros-$ROSDISTRO-moveit \
+    ros-$ROSDISTRO-rqt-tf-tree \
     ros-$ROSDISTRO-trac-ik-kinematics-plugin \  
     # UR dependencies
     ros-$ROSDISTRO-ur-client-library \

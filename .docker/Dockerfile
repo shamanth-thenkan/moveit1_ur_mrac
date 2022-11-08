@@ -37,7 +37,8 @@ RUN pip3 install -U --no-cache-dir\
     black \
     numpy \
     open3d \
-    pyquaternion
+    pyquaternion \
+    python-dateutil
 
 # Intall ROS pkgs and dependencies
 RUN apt-get update && apt-get install -y \

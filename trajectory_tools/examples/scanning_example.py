@@ -30,10 +30,14 @@ start_srv_req.rgbd_params.convert_rgb_to_intensity = False
 
 stop_srv_req = StopReconstructionRequest()
 # stop_srv_req.archive_directory = '/dev_ws/src.reconstruction/'
-stop_srv_req.mesh_filepath = "/home/v/test.ply"
+global height
+height = 0.18
+name = str(height)
+stop_srv_req.mesh_filepath = f"/home/usuario/{name}.ply"
 # stop_srv_req.normal_filters = [NormalFilterParams(
 #                     normal_direction=Vector3(x=0.0, y=0.0, z=1.0), angle=90)]
 # stop_srv_req.min_num_faces = 1000
+
 
 
 def robot_program():
@@ -47,10 +51,10 @@ def robot_program():
 
     start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
     pose1 = Pose(
-        position=Point(0.6, -0.5, 0.3), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(1.0, 0.3, height), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
     )
     pose2 = Pose(
-        position=Point(0.6, 0.5, 0.3), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(1.0, -0.3, height), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
     )
 
     th = TrajectoryHandler()
@@ -64,9 +68,9 @@ def robot_program():
     )
 
     # Move into position to start reconstruction
-    th.sequencer.plan(Ptp(goal=start, vel_scale=0.3, acc_scale=0.3))
+    th.sequencer.plan(Ptp(goal=start, vel_scale=0.2, acc_scale=0.3))
     th.sequencer.execute()
-    th.sequencer.plan(Ptp(goal=pose1, vel_scale=0.3, acc_scale=0.3))
+    th.sequencer.plan(Ptp(goal=pose1, vel_scale=0.2, acc_scale=0.3))
     th.sequencer.execute()
 
     # Start reconstruction with service srv_req
@@ -82,6 +86,9 @@ def robot_program():
 
     # Stop reconstruction with service srv_req
     resp = stop_recon(stop_srv_req)
+
+    th.sequencer.plan(Ptp(goal=start, vel_scale=0.2, acc_scale=0.3))
+    th.sequencer.execute()
 
     if resp:
         rospy.loginfo("robot program: reconstruction stopped successfully")

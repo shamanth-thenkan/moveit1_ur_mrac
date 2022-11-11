@@ -21,6 +21,13 @@ def robot_program():
 
     th.publish_marker_array([pose_l, pose_r])
 
+     # attach camera and set new tcp
+    th.attach_camera(ee_name)
+    th.move_group.set_end_effector_link(f"{ee_name}/tcp")
+    rospy.loginfo(
+        f"{th.name}: end effector link set to {th.move_group.get_end_effector_link()}"
+    )
+
     for pose in poses:
         th.sequencer.plan(Ptp(goal=pose, vel_scale=0.3, acc_scale=0.3))
         th.sequencer.execute()

@@ -19,9 +19,9 @@ start_srv_req.tracking_frame = "tool0"
 start_srv_req.relative_frame = "base_link"
 start_srv_req.translation_distance = 0.0
 start_srv_req.rotational_distance = 0.0
-start_srv_req.live = False
-start_srv_req.tsdf_params.voxel_length = 0.02
-start_srv_req.tsdf_params.sdf_trunc = 0.04
+start_srv_req.live = True
+start_srv_req.tsdf_params.voxel_length = 0.005
+start_srv_req.tsdf_params.sdf_trunc = 0.01
 start_srv_req.tsdf_params.min_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.tsdf_params.max_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.rgbd_params.depth_scale = 1000
@@ -31,7 +31,7 @@ start_srv_req.rgbd_params.convert_rgb_to_intensity = False
 stop_srv_req = StopReconstructionRequest()
 # stop_srv_req.archive_directory = '/dev_ws/src.reconstruction/'
 global height
-height = 0.18
+height = 0.15
 name = str(height)
 stop_srv_req.mesh_filepath = f"/home/usuario/{name}.ply"
 # stop_srv_req.normal_filters = [NormalFilterParams(
@@ -44,20 +44,25 @@ def robot_program():
 
     ee_name = "D405"
     th = TrajectoryHandler()
-    # rospy.wait_for_service("/start_reconstruction")
-    # rospy.loginfo("robot program: waiting for /start_reconstruction srv")
-    # start_recon = rospy.ServiceProxy("/start_reconstruction", StartReconstruction)
-    # stop_recon = rospy.ServiceProxy("/stop_reconstruction", StopReconstruction)
+    rospy.wait_for_service("/start_reconstruction")
+    rospy.loginfo("robot program: waiting for /start_reconstruction srv")
+    start_recon = rospy.ServiceProxy("/start_reconstruction", StartReconstruction)
+    stop_recon = rospy.ServiceProxy("/stop_reconstruction", StopReconstruction)
 
     start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
     pose1 = Pose(
-        position=Point(1.0, 0.3, height), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.85, 0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
     )
     pose2 = Pose(
-        position=Point(1.0, -0.3, height), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.85, -0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
     )
-
-    th.publish_marker_array([pose1, pose2])
+    pose3 = Pose(
+        position=Point(0.65, -0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+    )
+    pose4 = Pose(
+        position=Point(0.65, 0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+    )
+    th.publish_marker_array([pose1, pose2, pose3, pose4])
 
     # attach camera and set new tcp
     th.attach_camera(ee_name)
@@ -67,32 +72,36 @@ def robot_program():
     )
 
     # Move into position to start reconstruction
-    th.sequencer.plan(Ptp(goal=start, vel_scale=0.2, acc_scale=0.3))
+    th.sequencer.plan(Ptp(goal=start, vel_scale=0.4, acc_scale=0.2))
     th.sequencer.execute()
-    th.sequencer.plan(Ptp(goal=pose1, vel_scale=0.2, acc_scale=0.3))
+    th.sequencer.plan(Ptp(goal=pose1, vel_scale=0.3, acc_scale=0.3))
     th.sequencer.execute()
 
     # Start reconstruction with service srv_req
-    # resp = start_recon(start_srv_req)
+    resp = start_recon(start_srv_req)
 
-    # if resp:
-    #     rospy.loginfo("robot program: reconstruction started successfully")
-    # else:
-    #     rospy.loginfo("robot program: failed to start reconstruction")
+    if resp:
+        rospy.loginfo("robot program: reconstruction started successfully")
+    else:
+        rospy.loginfo("robot program: failed to start reconstruction")
 
-    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.05, acc_scale=0.05))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose3, vel_scale=0.05, acc_scale=0.05))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose4, vel_scale=0.05, acc_scale=0.05))
     th.sequencer.execute()
 
     # Stop reconstruction with service srv_req
-    # resp = stop_recon(stop_srv_req)
+    resp = stop_recon(stop_srv_req)
 
-    th.sequencer.plan(Ptp(goal=start, vel_scale=0.2, acc_scale=0.3))
+    th.sequencer.plan(Ptp(goal=start, vel_scale=0.4, acc_scale=0.2))
     th.sequencer.execute()
 
-    # if resp:
-    #     rospy.loginfo("robot program: reconstruction stopped successfully")
-    # else:
-    #     rospy.loginfo("robot program: failed to stop reconstruction")
+    if resp:
+        rospy.loginfo("robot program: reconstruction stopped successfully")
+    else:
+        rospy.loginfo("robot program: failed to stop reconstruction")
 
 
 if __name__ == "__main__":

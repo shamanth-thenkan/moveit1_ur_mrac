@@ -17,20 +17,10 @@ def robot_program():
     pose_r = Pose(position=Point(0.6, 0.6, 0.4),
                   orientation=from_euler(0.0, pi, 0.0))
 
-    poses = [start, pose_l, pose_r]
+    poses = [start, pose_l, pose_r,start]
 
     th.publish_marker_array([pose_l, pose_r])
 
-<<<<<<< HEAD
-=======
-     # attach camera and set new tcp
-    th.attach_camera(ee_name)
-    th.move_group.set_end_effector_link(f"{ee_name}/tcp")
-    rospy.loginfo(
-        f"{th.name}: end effector link set to {th.move_group.get_end_effector_link()}"
-    )
-
->>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
     for pose in poses:
         th.sequencer.plan(Ptp(goal=pose, vel_scale=0.3, acc_scale=0.3))
         th.sequencer.execute()

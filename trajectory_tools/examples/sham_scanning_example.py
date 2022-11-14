@@ -9,7 +9,11 @@ from industrial_reconstruction_msgs.srv import (StartReconstruction,
                                                 StartReconstructionRequest,
                                                 StopReconstruction,
                                                 StopReconstructionRequest)
+<<<<<<< HEAD
 from move_group_sequence.move_group_sequence import (Circ, Lin, Ptp, Sequence,
+=======
+from move_group_sequence.move_group_sequence import (Circ, Lin, Ptp, Sequence,Quaternion,
+>>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
                                                      from_euler)
 from trajectory_tools.trajectory_handler import TrajectoryHandler
 
@@ -20,7 +24,11 @@ start_srv_req.relative_frame = "base_link"
 start_srv_req.translation_distance = 0.0
 start_srv_req.rotational_distance = 0.0
 start_srv_req.live = True
+<<<<<<< HEAD
 start_srv_req.tsdf_params.voxel_length = 0.02
+=======
+start_srv_req.tsdf_params.voxel_length = 0.001
+>>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
 start_srv_req.tsdf_params.sdf_trunc = 0.04
 start_srv_req.tsdf_params.min_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.tsdf_params.max_box_values = Vector3(x=0.0, y=0.0, z=0.0)
@@ -39,6 +47,7 @@ stop_srv_req.mesh_filepath = "/home/v/test.ply"
 def robot_program():
 
     ee_name = "D405"
+<<<<<<< HEAD
 
     rospy.wait_for_service("/start_reconstruction")
     rospy.loginfo("robot program: waiting for /start_reconstruction srv")
@@ -54,6 +63,24 @@ def robot_program():
     )
 
     th = TrajectoryHandler()
+=======
+    th = TrajectoryHandler()
+    # rospy.wait_for_service("/start_reconstruction")
+    # rospy.loginfo("robot program: waiting for /start_reconstruction srv")
+    start_recon = rospy.ServiceProxy("/start_reconstruction", StartReconstruction)
+    stop_recon = rospy.ServiceProxy("/stop_reconstruction", StopReconstruction)
+
+    
+    start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
+    # start = th.start
+    pose2 = Pose(
+        position=Point(0.6, -0.5, 0.3), orientation=Quaternion(0.0, 0.1, 0.0, 0.0)
+    )
+    pose1 = Pose(
+        position=Point(0.6, 0.5, 0.3), orientation=Quaternion(0.0, 0.1, 0.0, 0.0)
+    )
+
+>>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
     th.publish_marker_array([pose1, pose2])
 
     # attach camera and set new tcp
@@ -70,6 +97,7 @@ def robot_program():
     th.sequencer.execute()
 
     # Start reconstruction with service srv_req
+<<<<<<< HEAD
     resp = start_recon(start_srv_req)
 
     if resp:
@@ -78,11 +106,27 @@ def robot_program():
         rospy.loginfo("robot program: failed to start reconstruction")
 
     th.sequencer.plan(Lin(goal=pose2, vel_scale=0.1, acc_scale=0.3))
+=======
+    # resp = start_recon(start_srv_req)
+
+    # if resp:
+    #     rospy.loginfo("robot program: reconstruction started successfully")
+    # else:
+    #     rospy.loginfo("robot program: failed to start reconstruction")
+
+    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.3, acc_scale=0.3))
+>>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
     th.sequencer.execute()
 
     # Stop reconstruction with service srv_req
     resp = stop_recon(stop_srv_req)
 
+<<<<<<< HEAD
+=======
+    th.sequencer.plan(Ptp(goal=start, vel_scale=0.3, acc_scale=0.3))
+    th.sequencer.execute()
+
+>>>>>>> d2f2c97c84ed5f7ef1fc5b82f0157ba53c55fdd0
     if resp:
         rospy.loginfo("robot program: reconstruction stopped successfully")
     else:

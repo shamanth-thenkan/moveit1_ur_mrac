@@ -31,7 +31,7 @@ start_srv_req.rgbd_params.convert_rgb_to_intensity = False
 stop_srv_req = StopReconstructionRequest()
 # stop_srv_req.archive_directory = '/dev_ws/src.reconstruction/'
 global height
-height = 0.18
+height = 0.19
 name = str(height)
 stop_srv_req.mesh_filepath = f"/home/usuario/{name}.ply"
 # stop_srv_req.normal_filters = [NormalFilterParams(

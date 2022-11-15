@@ -21,7 +21,7 @@ start_srv_req.translation_distance = 0.0
 start_srv_req.rotational_distance = 0.0
 start_srv_req.live = True
 start_srv_req.tsdf_params.voxel_length = 0.005
-start_srv_req.tsdf_params.sdf_trunc = 0.01
+start_srv_req.tsdf_params.sdf_trunc = 0.1
 start_srv_req.tsdf_params.min_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.tsdf_params.max_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.rgbd_params.depth_scale = 1000
@@ -31,7 +31,7 @@ start_srv_req.rgbd_params.convert_rgb_to_intensity = False
 stop_srv_req = StopReconstructionRequest()
 # stop_srv_req.archive_directory = '/dev_ws/src.reconstruction/'
 global height
-height = 0.15
+height = 2
 name = str(height)
 stop_srv_req.mesh_filepath = f"/home/usuario/{name}.ply"
 # stop_srv_req.normal_filters = [NormalFilterParams(
@@ -51,18 +51,21 @@ def robot_program():
 
     start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
     pose1 = Pose(
-        position=Point(0.85, 0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.75, 0.5, 0.2), orientation=Quaternion(1.0, 0.0, 0.0, 0.0)
     )
     pose2 = Pose(
-        position=Point(0.85, -0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.75, -0.5, 0.2), orientation=Quaternion(1.0, 0.0, 0.0, 0.0)
     )
     pose3 = Pose(
-        position=Point(0.65, -0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.825, -0.575, 0.2), orientation=Quaternion(1.0, 0.0, 0.0, 0.0)
     )
     pose4 = Pose(
-        position=Point(0.65, 0.5, 0.15), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
+        position=Point(0.9, -0.5, 0.2), orientation=Quaternion(1.0, 0.0, 0.0, 0.0)
     )
-    th.publish_marker_array([pose1, pose2, pose3, pose4])
+    pose5 = Pose(
+        position=Point(0.9, 0.5, 0.2), orientation=Quaternion(1.0, 0.0, 0.0, 0.0)
+    )
+    th.publish_marker_array([pose1, pose2, pose3, pose4, pose5])
 
     # attach camera and set new tcp
     th.attach_camera(ee_name)
@@ -85,11 +88,13 @@ def robot_program():
     else:
         rospy.loginfo("robot program: failed to start reconstruction")
 
-    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.05, acc_scale=0.05))
+    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.2, acc_scale=0.2))
     th.sequencer.execute()
-    th.sequencer.plan(Lin(goal=pose3, vel_scale=0.05, acc_scale=0.05))
+    th.sequencer.plan(Lin(goal=pose3, vel_scale=0.2, acc_scale=0.2))
     th.sequencer.execute()
-    th.sequencer.plan(Lin(goal=pose4, vel_scale=0.05, acc_scale=0.05))
+    th.sequencer.plan(Lin(goal=pose4, vel_scale=0.2, acc_scale=0.2))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose5, vel_scale=0.2, acc_scale=0.2))
     th.sequencer.execute()
 
     # Stop reconstruction with service srv_req

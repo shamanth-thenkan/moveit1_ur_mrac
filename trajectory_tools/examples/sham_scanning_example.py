@@ -51,19 +51,25 @@ def robot_program():
 
     start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
     pose1 = Pose(
-        position=Point(0.678, 0.451, height), orientation=Quaternion(0.697132827754, 0.0134482236569, 0.714814382181, 0.0535291021379)
+        position=Point(0.67889286632, 0.451261641105 , 0.169762287405), orientation=Quaternion(-0.521677595724, 0.593610255501, -0.521677595724, -0.321452697613)
     )
     pose2 = Pose(
-        position=Point(0.876, 0.451, height), orientation=Quaternion(-0.358501652604, 0.257841804226, 0.523872860265, 0.728389590364)
+        position=Point(0.876743353776, 0.451261641105 , 0.169762287405), orientation=Quaternion(0.772679617537, -0.163136888236, 0.0, 0.61347580583)
     )
     pose3 = Pose(
-        position=Point(0.876, -0.67, height), orientation=Quaternion(-0.358501652604, 0.257841804226, -0.523872860265, 0.728389590364)
+        position=Point(0.876743353776, -0.0673464548037 , 0.169762287405), orientation=Quaternion(0.0, 0.942679959238, 0.0, -0.333698208642)
     )
     pose4 = Pose(
-        position=Point(0.876, -0.585, height), orientation=Quaternion(0.358501652604, 0.257841804226, 0.523872860265, 0.728389590364)
+        position=Point(0.876743353776, -0.585954550712 , 0.169762287405), orientation=Quaternion(-0.772679617537, -0.163136888236, 0.0, 0.61347580583)
+    )
+    pose5 = Pose(
+        position=Point(0.67889286632, -0.585954550712 , 0.169762287405), orientation=Quaternion(-0.779040668006, 0.132726361019, 0.0, 0.612763698895)
+    )
+    pose6 = Pose(
+        position=Point(0.67889286632, -0.0673464548037 , 0.169762287405), orientation=Quaternion(0.677723917658, 0.677723917658, 0.201718346797, 0.201718346797)
     )
     th = TrajectoryHandler()
-    th.publish_marker_array([pose1, pose2])
+    th.publish_marker_array([pose1, pose2, pose3, pose4, pose5, pose6])
 
     # attach camera and set new tcp
     th.attach_camera(ee_name)
@@ -88,9 +94,15 @@ def robot_program():
 
     th.sequencer.plan(Lin(goal=pose2, vel_scale=0.1, acc_scale=0.3))
     th.sequencer.execute()
-    # th.sequencer.plan(Lin(goal=pose3, vel_scale=0.1, acc_scale=0.3))
-    # th.sequencer.execute()
-    # th.sequencer.plan(Lin(goal=pose4, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.plan(Lin(goal=pose3, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose4, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose5, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.execute()
+    th.sequencer.plan(Lin(goal=pose6, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.execute()
+    # th.sequencer.plan(Ptp(goal=pose1, vel_scale=0.2, acc_scale=0.3))
     # th.sequencer.execute()
     # Stop reconstruction with service srv_req
     # resp = stop_recon(stop_srv_req)

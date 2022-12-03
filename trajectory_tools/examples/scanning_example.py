@@ -20,18 +20,18 @@ start_srv_req.relative_frame = "base_link"
 start_srv_req.translation_distance = 0.0
 start_srv_req.rotational_distance = 0.0
 start_srv_req.live = True
-start_srv_req.tsdf_params.voxel_length = 0.02
-start_srv_req.tsdf_params.sdf_trunc = 0.04
+start_srv_req.tsdf_params.voxel_length = 0.2
+start_srv_req.tsdf_params.sdf_trunc = 0.4
 start_srv_req.tsdf_params.min_box_values = Vector3(x=0.0, y=0.0, z=0.0)
 start_srv_req.tsdf_params.max_box_values = Vector3(x=0.0, y=0.0, z=0.0)
-start_srv_req.rgbd_params.depth_scale = 1000
-start_srv_req.rgbd_params.depth_trunc = 0.5
+start_srv_req.rgbd_params.depth_scale = 500
+start_srv_req.rgbd_params.depth_trunc = 0.25
 start_srv_req.rgbd_params.convert_rgb_to_intensity = False
 
 stop_srv_req = StopReconstructionRequest()
 # stop_srv_req.archive_directory = '/dev_ws/src.reconstruction/'
 global height
-height = 0.19
+height = 0.15
 name = str(height)
 stop_srv_req.mesh_filepath = f"/home/usuario/{name}.ply"
 # stop_srv_req.normal_filters = [NormalFilterParams(
@@ -49,7 +49,7 @@ def robot_program():
     start_recon = rospy.ServiceProxy("/start_reconstruction", StartReconstruction)
     stop_recon = rospy.ServiceProxy("/stop_reconstruction", StopReconstruction)
 
-    start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
+    start = (0.0, -pi / 2.0, pi / 2.0, -pi, -pi / 2.0, 0.0)
     pose1 = Pose(
         position=Point(1.0, 0.3, height), orientation=Quaternion(0.0, 1.0, 0.0, 0.0)
     )
@@ -81,7 +81,7 @@ def robot_program():
     else:
         rospy.loginfo("robot program: failed to start reconstruction")
 
-    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.1, acc_scale=0.3))
+    th.sequencer.plan(Lin(goal=pose2, vel_scale=0.2, acc_scale=0.3))
     th.sequencer.execute()
 
     # Stop reconstruction with service srv_req

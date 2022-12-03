@@ -49,7 +49,7 @@ def robot_program():
     # start_recon = rospy.ServiceProxy("/start_reconstruction", StartReconstruction)
     # stop_recon = rospy.ServiceProxy("/stop_reconstruction", StopReconstruction)
 
-    start = (0.0, -pi / 2.0, pi / 2.0, 0.0, pi / 2.0, 0.0)
+    start = (0.0, -pi / 2.0, pi / 2.0, -pi, -pi / 2.0, 0.0)
     pose1 = Pose(
         position=Point(0.67889286632, 0.451261641105 , 0.169762287405), orientation=Quaternion(-0.521677595724, 0.593610255501, -0.521677595724, -0.321452697613)
     )
